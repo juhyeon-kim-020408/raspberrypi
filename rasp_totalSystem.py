@@ -16,10 +16,10 @@ def on_connect(mqttc, obj, flags, rc):
 			print("--------------------------------")
 
 mqtt_client = mqtt.Client(client_id=THING_NAME)
-                   
+mqtt_client.on_connect = on_connect             
 mqtt_client.tls_set(CAROOTPATH,certfile=CERTPATH,keyfile=KEYPATH,tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 mqtt_client.connect(ENDPOINT, port=8883)
-mqtt_client.loop_start()
+
 	 
 
 GPIO.setmode(GPIO.BCM)
@@ -54,8 +54,7 @@ while True:
 	print("(2)번 분류장 : %d개" % section2)
 	print("(3)번 분류장 : %d개" % section3)
 	print("--------------------------------")
-	mqtt_client.on_connect = on_connect
-
+	mqtt_client.loop_start()
 	data = {                               # 변수들의 값을 JSON 형식으로 변환
 			"section1": section1,
 			"section2": section2,
