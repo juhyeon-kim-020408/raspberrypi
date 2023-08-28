@@ -2,21 +2,15 @@ import RPi.GPIO as GPIO
 from hx711 import HX711
 import serial, json, ssl, time, sys
 
-ENDPOINT = "본인의 엔드포인트"
-THING_NAME = 'raspi'
-CERTPATH =  "/home/pi/aws/raspi.cert.pem" # cert파일 경로
-KEYPATH = "/home/pi/aws/raspi.private.key" # key 파일 경로
-CAROOTPATH = "/home/pi/aws/root-CA.crt" # RootCaPem 파일 경로
+ENDPOINT = "avznflen5h2qi-ats.iot.ap-southeast-2.amazonaws.com"
+THING_NAME = 'raspberrypi'
+CERTPATH =  "/home/pi/Desktop/raspProjects/awsDocuments/raspberrypi.cert.pem" # cert파일 경로
+KEYPATH = "/home/pi/Desktop/raspProjects/awsDocuments/raspberrypi.private.key" # key 파일 경로
+CAROOTPATH = "/home/pi/Desktop/raspProjects/awsDocuments/root-CA.crt" # RootCaPem 파일 경로
 TOPIC = 'test' #주제
 
-# 라즈베리파이와 aws가 연결되었을때 알림 함수 생성
-def on_connect(mqttc, obj, flags, rc):
-	if rc == 0: # 연결 성공
-		print("라즈베리파이와 aws가 연결되었습니다!!")
-		print("----------------------------------------------")
-
 mqtt_client = mqtt.Client(client_id=THING_NAME)
-
+mqtt_client.on_connect = on_connect
 mqtt_client.tls_set(CAROOTPATH, certfile= CERTPATH, keyfile=KEYPATH, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 mqtt_client.connect(ENDPOINT, port=8883)
 mqtt_client.loop_start()
@@ -93,8 +87,11 @@ while True:
 			time.sleep(1)
 			print("(3)번 분류장으로 분류 완료!!")
 		print("----------------------------------------------")
-		mqtt_client.on_connect = on_connect
-		data = {                               # 변수들의 값을 JSON 형식으로 변환
+		def on_connect(mqttc, obj, flags, rc):
+  		    if rc == 0: # 연결 성공
+				print("라즈베리파이와 aws가 연결되었습니다!!")
+				#print("----------------------------------------------")
+		 data = {                               # 변수들의 값을 JSON 형식으로 변환
 			"distance1": distance1,
 			"distance2": distance2,
 			"distance3": distance3,
@@ -102,6 +99,6 @@ while True:
 			"section2": section2,
 			"section3": section3,
 			"boxVolume": boxVolume
-		}
-		payload = json.dumps(data)  # JSON 객체를 문자열로 인코딩
-	mqtt_client.publish(topic, payload, qos=1) # 토픽에 메시지 발행
+			}
+        	payload = json.dumps(data)  # JSON 객체를 문자열로 인코딩
+        	client.publish(topic, payload, qos=1) # 토픽에 메시지 발행
