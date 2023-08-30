@@ -14,9 +14,9 @@ hx.reset() # 센서 초기화
 hx.tare() # 센서 준비
 
 # 라즈베리파이의 uart2, 3, 4를 열기
-uart2 = serial.Serial("/dev/ttyAMA1", baudrate=9600)
-uart3 = serial.Serial("/dev/ttyAMA2", baudrate=9600)
-uart4 = serial.Serial("/dev/ttyAMA3", baudrate=9600)
+uart3 = serial.Serial("/dev/ttyAMA1", baudrate=9600)
+uart4 = serial.Serial("/dev/ttyAMA2", baudrate=9600)
+uart5 = serial.Serial("/dev/ttyAMA3", baudrate=9600)
 
 
 ENDPOINT = "avznflen5h2qi-ats.iot.ap-southeast-2.amazonaws.com"
@@ -63,9 +63,9 @@ while True:
 	
 	
 	# tof10120센서1, 2, 3에서 거리 데이터 읽기
-	distance1 = read_distance(uart2)
-	distance2 = read_distance(uart3)
-	distance3 = read_distance(uart4)
+	distance1 = read_distance(uart3)
+	distance2 = read_distance(uart4)
+	distance3 = read_distance(uart5)
 	# 거리 데이터 곱하기
 	boxVolume = distance1 * distance2 * distance3
 	time.sleep(1.5)
