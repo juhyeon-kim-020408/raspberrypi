@@ -27,7 +27,6 @@ while True:
 	distances2 = []
 	distances3 = []
 	distances4 = []
-	station = ""   # 구역 문자열 초기화
 	
 	# n번 반복하면서 센서로부터 데이터 읽기
 	for i in range(10):
